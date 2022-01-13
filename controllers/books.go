@@ -8,11 +8,11 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func FindBooks(c *gin.Context){
+func BooksIndex(c *gin.Context){
 	var books []models.Book
 	models.DB.Find(&books)
 
-	c.JSON(http.StatusOK, gin.H{"data": books})
+	c.HTML(http.StatusOK, "index.html", gin.H{"data": books})
 }
 
 func AddBook(c *gin.Context){
