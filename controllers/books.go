@@ -55,7 +55,6 @@ func UpdateBook(c *gin.Context) {
 	var input models.UpdateBookInput
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		fmt.Println("error in here")
 		return
 	}
 	fmt.Println("user input:", input)
@@ -64,4 +63,15 @@ func UpdateBook(c *gin.Context) {
 		panic(uperr)
 	}
 	c.JSON(http.StatusOK, gin.H{"data": book})
+}
+
+func DeleteBook(c *gin.Context){
+	var book models.Book
+	fmt.Println(book)
+	if err := models.DB.Where("id = ? ", c.Param("id")).First(&book).Error; err != nil{
+		c.JSON(http.StatusBadRequest, gin.H{"error": "not found"})
+	}
+
+	models.DB.Delete(&book)
+	c.JSON(http.StatusOK, gin.H{"result": "delete complete"})
 }
