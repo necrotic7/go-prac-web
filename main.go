@@ -3,7 +3,7 @@ package main
 import (
 	_"gin-prac-web/m/controllers"
 	"gin-prac-web/m/models"
-	_ "net/http"
+	_"net/http"
 
 	"github.com/gin-gonic/gin"
 )
@@ -17,3 +17,4 @@ func main(){
 	initializeRoutes()
 	Router.Run()
 }
+

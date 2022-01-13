@@ -4,32 +4,52 @@ import (
 	"fmt"
 	"gin-prac-web/m/models"
 	"net/http"
-
+	
 	"github.com/gin-gonic/gin"
+	
 )
 
 func BooksIndex(c *gin.Context){
 	var books []models.Book
 	models.DB.Find(&books)
-
-	c.HTML(http.StatusOK, "index.html", gin.H{"data": books})
+	
+	render(c, "index.html", gin.H{"data": books})
 }
 
+
 func AddBook(c *gin.Context){
-	var input models.AddBookInput
-	// ShouldBindJSON:  If the data is invalid, it will return a 400 error 
-	// to the client and tell them which fields are invalid.
-	if err:= c.ShouldBindJSON(&input); err != nil{
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	if method := c.Request.Method; method == "GET"{
+		render(c, "add.html", gin.H{})
 		return
 	}
+	
+	var input models.AddBookInput
 
-	book := models.Book{Title: input.Title, Author: input.Author}
-	models.DB.Create(&book)
+	if form := c.PostForm("Title"); form != ""{
+		input.Title = c.PostForm("Title")
+		input.Author = c.PostForm("Author")
+		book := models.Book{Title: input.Title, Author: input.Author}
+		fmt.Println(input)
+		models.DB.Create(&book)
+		c.Redirect(http.StatusFound, "/books")//find what status can pass into redirect
+		return
+	}else{
+		// ShouldBindJSON:  If the data is invalid, it will return a 400 error 
+		// to the client and tell them which fields are invalid.
+		if err:= c.ShouldBindJSON(&input); err != nil{
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+	
+		book := models.Book{Title: input.Title, Author: input.Author}
+		models.DB.Create(&book)
+	
+		render(c, "index.html", gin.H{"data": book,})
+	}
+	
+	// render(c, "index.html", gin.H{"data": books,})
+	
 
-	c.JSON(http.StatusOK, gin.H{
-		"data": book,
-	})
 }
 
 func FindBook(c *gin.Context){
