@@ -1,4 +1,4 @@
-module gin-bookstore/m
+module gin-prac-web/m
 
 go 1.17
 
