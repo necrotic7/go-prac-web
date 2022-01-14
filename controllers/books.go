@@ -47,9 +47,6 @@ func AddBook(c *gin.Context){
 		render(c, "index.html", gin.H{"data": book,})
 	}
 	
-	// render(c, "index.html", gin.H{"data": books,})
-	
-
 }
 
 func FindBook(c *gin.Context){
@@ -66,23 +63,42 @@ func FindBook(c *gin.Context){
 func UpdateBook(c *gin.Context) {
 	// Get model if exist
 	var book models.Book
+	var input models.UpdateBookInput
 	if err := models.DB.Where("id = ?", c.Param("id")).First(&book).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Record not found!"})
 		return
 	}
-	fmt.Println("select book:", book)
-	// Validate input
-	var input models.UpdateBookInput
-	if err := c.ShouldBindJSON(&input); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	
+	//show form page
+	if method := c.Request.Method; method == "GET"{
+		render(c, "update.html", gin.H{"data":book})
+		print("GET")
 		return
 	}
-	fmt.Println("user input:", input)
-	uperr:=models.DB.Model(&book).Updates(models.Book{Title:input.Title, Author:input.Author}).Error
-	if uperr != nil{
-		panic(uperr)
+	//pass form data
+	if method := c.Request.Method; method == "POST"{
+		input.Title = c.PostForm("Title")
+		input.Author = c.PostForm("Author")
+		
+		models.DB.Model(&book).Updates(models.Book{Title:input.Title, Author:input.Author})
+		c.Redirect(http.StatusFound, "/books")//find what status can pass into redirect
+		return
+	//for API PATCH
+	}else if method := c.Request.Method; method == "PATCH"{
+		
+		// Validate input
+		var input models.UpdateBookInput
+		if err := c.ShouldBindJSON(&input); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+		
+		uperr:=models.DB.Model(&book).Updates(models.Book{Title:input.Title, Author:input.Author}).Error
+		if uperr != nil{
+			panic(uperr)
+		}
+		c.JSON(http.StatusOK, gin.H{"data": book})
 	}
-	c.JSON(http.StatusOK, gin.H{"data": book})
 }
 
 func DeleteBook(c *gin.Context){

@@ -2,14 +2,15 @@
 
 <!--Embed the header.html template at this location-->
 {{ template "header.html" .}}
-    <h1>Add a Book</h1>
+    <h1>update Book</h1>
     
-    <form method="post">
-        Title:<input class="form-control" id="Title" type="text" name="Title"><br>
-        Author:<input class="form-control" id="Author" type="text" name="Author"><br>
+    <form method="POST">
+        
+        Title:<input class="form-control" type="text" name="Title" value="{{.data.Title}}"><br>
+        Author:<input class="form-control" type="text" name="Author" value="{{.data.Author}}"><br>
+        <br>
         <input class="btn btn-primary" type="submit" value="submit"> 
         <a href="/books" class="btn btn-info" type="buttom">back</a>
-        
     </form>
 <!--Embed the footer.html template at this location-->
 {{ template "footer.html" .}}

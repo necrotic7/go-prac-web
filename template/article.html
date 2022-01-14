@@ -4,10 +4,12 @@
 {{ template "header.html" .}}
 
 <!--Display the title of the article-->
-<h1>{{.data.Title}}</h1>
+<h1>[{{.data.ID}}] {{.data.Title}}</h1>
 
 <!--Display the content of the article-->
 <p>{{.data.Author}}</p>
 
 <!--Embed the footer.html template at this location-->
 {{ template "footer.html" .}}
+
+<a href="/books" class="btn btn-info" type="buttom">back</a>
