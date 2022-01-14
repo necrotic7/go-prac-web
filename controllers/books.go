@@ -103,11 +103,10 @@ func UpdateBook(c *gin.Context) {
 
 func DeleteBook(c *gin.Context){
 	var book models.Book
-	fmt.Println(book)
 	if err := models.DB.Where("id = ? ", c.Param("id")).First(&book).Error; err != nil{
 		c.JSON(http.StatusBadRequest, gin.H{"error": "not found"})
 	}
 
 	models.DB.Delete(&book)
-	c.JSON(http.StatusOK, gin.H{"result": "delete complete"})
+	c.Redirect(http.StatusFound, "/books")
 }

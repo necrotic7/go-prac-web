@@ -3,6 +3,7 @@
 <!--Embed the header.html template at this location-->
 {{ template "header.html" .}}
 
+  
   <!--Loop over the payload variable, which is the list of articles-->
   <table style="width:100%">
     <tr>
@@ -23,11 +24,21 @@
       </td>
       <td>
         <a href="/books/edit/{{.ID}}" type="button" class="btn btn-primary">Edit</a>
-        <button type="button" class="btn btn-danger">Delete</button>
+        <button onclick="DeleteConfirm({{.ID}})" class="btn btn-danger">Delete</button>
       </td>
       </tr>
     
   {{end}}
 </table>
 <!--Embed the footer.html template at this location-->
+
+<script>
+  function DeleteConfirm(id) {
+    var yes = confirm('你確定嗎？');
+  
+      if (yes) {
+        location.href=`/books/delete/${id}`;
+      } 
+  }
+</script>
 {{ template "footer.html" .}}
