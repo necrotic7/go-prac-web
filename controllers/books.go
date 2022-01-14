@@ -60,7 +60,7 @@ func FindBook(c *gin.Context){
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"data":book})
+	render(c, "article.html", gin.H{"data":book})
 }
 
 func UpdateBook(c *gin.Context) {

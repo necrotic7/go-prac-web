@@ -4,15 +4,30 @@
 {{ template "header.html" .}}
 
   <!--Loop over the payload variable, which is the list of articles-->
+  <table style="width:100%">
+    <tr>
+      <th>Book ID/Book name</th>
+      <th>Actions</th>
+    </tr>
   {{range .data }}
     <!--Create the link for the article based on its ID-->
-    <a href="#">
-      <!--Display the title of the article -->
-      <h2>{{.Title}}</h2>
-    </a>
-    <!--Display the content of the article-->
-    <p>{{.Author}}</p>
+    
+      
+      <tr>
+        <td>
+        <a href="/books/{{.ID}}">
+          <!--Display the title of the article -->
+          <h3>[{{.ID}}]{{.Title}}</h3></a>
+          <p>{{.Author}}</p>
+        
+      </td>
+      <td>
+        <bottom type="button" class="btn btn-primary">Edit</bottom>
+        <button type="button" class="btn btn-danger">Delete</button>
+      </td>
+      </tr>
+    
   {{end}}
-
+</table>
 <!--Embed the footer.html template at this location-->
 {{ template "footer.html" .}}
