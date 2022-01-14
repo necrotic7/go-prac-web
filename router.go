@@ -19,4 +19,9 @@ func initializeRoutes() {
 	
 	Router.GET("/books/delete/:id", controllers.DeleteBook)
 	Router.DELETE("/books/delete/:id", controllers.DeleteBook)
+
+	Router.GET("/register", controllers.Register)
+	Router.POST("/register", controllers.Register)
+
+	Router.GET("/login", controllers.Login)
 }
