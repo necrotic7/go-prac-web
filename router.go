@@ -2,6 +2,8 @@ package main
 
 import (
 	"gin-prac-web/m/controllers"
+	_"github.com/gin-contrib/sessions"
+	_"github.com/gin-contrib/sessions/cookie"
 )
 
 func initializeRoutes() {
@@ -22,6 +24,7 @@ func initializeRoutes() {
 
 	Router.GET("/register", controllers.Register)
 	Router.POST("/register", controllers.Register)
+	
 
 	Router.GET("/login", controllers.Login)
 }

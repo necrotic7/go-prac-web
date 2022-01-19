@@ -25,9 +25,9 @@
     <title>Register</title>
 </head>
 <body>
-    {{if .error}}
+    {{if .registed}}
     <div class="alert alert-danger" role="alert">
-        {{ .error }}
+        {{ .registed }}
     </div>
     {{end}}
     <div class="title"><h1>Register</h1></div>
@@ -39,6 +39,7 @@
         <input class="btn btn-primary" type="submit" value="submit"> 
         
     </form> 
+    <p>已有帳號？ <a href="/login">登入</a></p>
 </div>
 </body>
 </html>
