@@ -27,4 +27,6 @@ func initializeRoutes() {
 	
 
 	Router.GET("/login", controllers.Login)
+	Router.POST("/login", controllers.Login)
+	Router.GET("/logout", controllers.Logout)
 }

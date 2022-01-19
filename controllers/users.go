@@ -2,9 +2,12 @@ package controllers
 
 import (
 	"errors"
+	_"fmt"
+
 	"gin-prac-web/m/models"
-	
+
 	"net/http"
+
 	"github.com/gin-contrib/sessions"
 
 	"github.com/gin-gonic/gin"
@@ -38,7 +41,7 @@ func Register(c *gin.Context){
 			}
 		}
 
-		session := sessions.Default(c)
+		session := sessions.DefaultMany(c, "msg")
 		
         session.Set("msg", "註冊成功")
         session.Save()
@@ -48,10 +51,49 @@ func Register(c *gin.Context){
 }
 
 func Login(c *gin.Context){
-	session := sessions.Default(c)
-    msg := session.Get("msg")
-	session.Clear()
-	session.Save()
-	render(c, "login.html", gin.H{"msg": msg})
+
+	if c.Request.Method == "GET"{
+		session1 := sessions.DefaultMany(c, "msg")
+		msg := session1.Get("msg")
+		session1.Clear()
+		session1.Save()
+		session2 := sessions.DefaultMany(c, "error")
+		err := session2.Get("error")
+		session2.Clear()
+		session2.Save()
+		render(c, "login.html", gin.H{"msg": msg, "error": err})
+		
+	}
 	
+	if c.Request.Method == "POST"{
+		var user models.User
+		var input models.LoginUser
+
+		input.Username = c.PostForm("Username")
+		input.Password = c.PostForm("Password")
+		if err := models.DB.Where("username = ?", input.Username).First(&user).Error; err != nil{
+			c.HTML(http.StatusBadRequest, "login.html", gin.H{"error": errors.New("使用者不存在")})
+			return
+		}
+		if input.Password != user.Password{
+			c.HTML(http.StatusBadRequest, "login.html", gin.H{"error": errors.New("密碼錯誤")})
+			return
+		}
+		session := sessions.DefaultMany(c, "isAuth")
+		session.Set("isAuth", true)
+		session.Save()
+		c.Redirect(http.StatusFound, "/books")		
+		return
+	}
+}
+
+func Logout(c *gin.Context){
+	session1 := sessions.DefaultMany(c, "isAuth")
+	session1.Set("isAuth", false)
+	session1.Save()
+	session2 := sessions.DefaultMany(c, "msg")
+	session2.Clear()
+	session2.Set("msg", "登出成功")
+	session2.Save()
+	c.Redirect(http.StatusFound, "/login")
 }

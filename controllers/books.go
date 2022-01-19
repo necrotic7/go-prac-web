@@ -4,16 +4,27 @@ import (
 	"fmt"
 	"gin-prac-web/m/models"
 	"net/http"
-	
+
+	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
-	
 )
 
 func BooksIndex(c *gin.Context){
-	var books []models.Book
-	models.DB.Find(&books)
+	session := sessions.DefaultMany(c, "isAuth")
+	Auth := session.Get("isAuth")
+	fmt.Println(Auth)
+	if Auth.(bool) {
+		var books []models.Book
+		models.DB.Find(&books)
+		render(c, "index.html", gin.H{"data": books})
+	}else{
+		session2 := sessions.DefaultMany(c, "error")
+		session2.Clear()
+		session2.Set("error", "請先登入")
+		session2.Save()
+		c.Redirect(http.StatusFound, "/login")
+	}
 	
-	render(c, "index.html", gin.H{"data": books})
 }
 
 
@@ -72,7 +83,6 @@ func UpdateBook(c *gin.Context) {
 	//show form page
 	if method := c.Request.Method; method == "GET"{
 		render(c, "update.html", gin.H{"data":book})
-		print("GET")
 		return
 	}
 	//pass form data

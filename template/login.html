@@ -31,12 +31,17 @@
         {{ .msg }}
     </div>
     {{end}}
+    {{if .error}}
+    <div class="alert alert-danger" role="alert">
+        {{ .error }}
+    </div>
+    {{end}}
     <div class="title"><h1>Login</h1></div>
     
     <div class="item">
-        <form method="post">
+        <form method="POST">
             Username:<input class="form-control"  type="text" name="Username"><br>
-            Password:<input class="form-control"  type="text" name="Password"><br>
+            Password:<input class="form-control"  type="Password" name="Password"><br>
             <input class="btn btn-primary" type="submit" value="Login"> 
             
             

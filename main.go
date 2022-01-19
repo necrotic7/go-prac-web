@@ -17,8 +17,9 @@ func main(){
 	Router = gin.Default()
 	models.ConnectDataBase()
 	Router.LoadHTMLGlob("template/*")
-	store := cookie.NewStore([]byte("msg"))
-	Router.Use(sessions.Sessions("my", store))
+	store := cookie.NewStore([]byte("secret"))
+	sessionNames := []string{"msg", "error", "isAuth"}
+    Router.Use(sessions.SessionsMany(sessionNames, store))
 	
 	initializeRoutes()
 	Router.Run()

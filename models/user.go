@@ -11,3 +11,8 @@ type ReigisterUser struct{
 	Password string `json:"password" binding:"required"`
 	ConfirmPwd string `json:"confirmpwd" binding:"required"`
 }
+
+type LoginUser struct{
+	Username string `json:"username" binding:"required"`
+	Password string `json:"password" binding:"required"`
+}
